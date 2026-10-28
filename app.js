@@ -29,9 +29,14 @@ function showImportErrors(errors){toast(`Import failed: ${errors[0]}`);console.e
 async function importZip(file){try{if(!window.JSZip)throw new Error('ZIP support failed to load');if(file.size>20*1024*1024)throw new Error('ZIP file exceeds the 20 MB limit');const zip=await JSZip.loadAsync(file,{checkCRC32:true});const files=Object.values(zip.files).filter(f=>!f.dir);if(files.length>32)throw new Error('ZIP contains too many files');const total=files.reduce((n,f)=>n+(f._data?.uncompressedSize||0),0);if(total>50*1024*1024)throw new Error('Unzipped content exceeds 50 MB');for(const f of files)if(f.name.startsWith('/')||f.name.split('/').includes('..'))throw new Error('ZIP contains an unsafe path');const read=async name=>{if(!name||name.startsWith('/')||name.split('/').includes('..'))throw new Error(`Unsafe file path: ${name}`);const item=zip.file(name);if(!item)throw new Error(`Missing ${name}`);return JSON.parse(await item.async('string'))};const manifest=await read('manifest.json');const filesMap=manifest.files||{};const pkg={manifest,subtitles:await read(filesMap.subtitles||'subtitles.json'),quizzes:await read(filesMap.quizzes||'quizzes.json'),vocabulary:await read(filesMap.vocabulary||'vocabulary.json'),culture:await read(filesMap.culture||'culture.json')};const errors=validatePackage(pkg);if(errors.length){showImportErrors(errors);return}startContent(mapPackage(pkg));}catch(e){toast(`Import failed: ${e.message}`)}}
 async function loadDemo(){try{const base='demo-content/fade-spanish-demo/';const names=['manifest','subtitles','quizzes','vocabulary','culture'];const entries=await Promise.all(names.map(async n=>[n,await (await fetch(`${base}${n}.json`)).json()]));const pkg=Object.fromEntries(entries);const errors=validatePackage(pkg);if(errors.length){showImportErrors(errors);return}startContent(mapPackage(pkg));}catch(e){toast(`Could not load the demo: ${e.message}`)}}
 $('#loadDemo').addEventListener('click',loadDemo);$('#navTry')?.addEventListener('click',loadDemo);$('#choosePackage').addEventListener('click',()=>$('#packageInput').click());$('#packageInput').addEventListener('change',e=>{if(e.target.files[0])importZip(e.target.files[0]);e.target.value=''});$$('[data-scroll]').forEach(button=>button.addEventListener('click',()=>document.getElementById(button.dataset.scroll)?.scrollIntoView({behavior:'smooth'})));
+const revealWords=$$('.tagline-reveal [data-reveal-word]');
+if(revealWords.length&&'IntersectionObserver' in window){
+ const wordObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-revealed');wordObserver.unobserve(entry.target)}}),{threshold:.6,rootMargin:'0px 0px -12%'});
+ revealWords.forEach((word,index)=>{word.style.transitionDelay=`${index*140}ms`;wordObserver.observe(word)});
+}else{revealWords.forEach(word=>word.classList.add('is-revealed'))}
 if('IntersectionObserver' in window){
  const landingObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('is-visible')}),{threshold:.12});
- $$('.landing-section,.landing-demo,.landing-footer').forEach(section=>landingObserver.observe(section));
+ $$('.landing-section,.landing-demo,.landing-footer,.landing-faq').forEach(section=>landingObserver.observe(section));
  const journeySteps=$$('.journey-story-step');
  const journeyCharacter=$('.journey-character-wrap');
  const journeyObserver=new IntersectionObserver(entries=>{
@@ -46,7 +51,7 @@ if('IntersectionObserver' in window){
  },{threshold:.28,rootMargin:'-8% 0px -28%'});
  journeySteps.forEach((step,index)=>{step.style.setProperty('--journey-delay',`${index*90}ms`);journeyObserver.observe(step)});
 }else{
- $$('.landing-section,.landing-demo,.landing-footer,.journey-story-step').forEach(section=>section.classList.add('is-visible'));
+ $$('.landing-section,.landing-demo,.landing-footer,.landing-faq,.journey-story-step').forEach(section=>section.classList.add('is-visible'));
 }
 const storyBoard=$('#journeyBoard');
 if(storyBoard){
