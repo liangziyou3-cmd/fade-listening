@@ -305,3 +305,7 @@ body{font-family:'Manrope',sans-serif}
 .simple-page p{max-width:620px;color:#66809a;font-size:16px;line-height:1.7;text-wrap:pretty}
 .simple-back{display:inline-block;margin-bottom:72px;color:#f17f6c;font-size:14px;font-weight:700;text-decoration:none}
 .simple-cta{display:inline-flex;margin-top:20px;text-decoration:none}
+/* Keep the tagline and learner journey in one continuous reading rhythm. */
+.landing-tagline{padding-bottom:32px}
+.journey-section{padding-top:48px}
+@media(max-width:620px){.landing-tagline{padding-bottom:28px}.journey-section{padding-top:40px}}
