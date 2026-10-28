@@ -53,18 +53,20 @@ if(storyBoard){
  const storySlides=$$('.journey-story-slide');
  const storyDots=$$('.storyboard-dots button');
  let activeStory=0;
- const updateStory=(index,behavior='smooth')=>{
-  activeStory=Math.max(0,Math.min(storySlides.length-1,index));
-  const target=storySlides[activeStory];
-  if(target)target.scrollIntoView({behavior,block:'nearest',inline:'start'});
-  storyBoard.scrollLeft=activeStory*storyBoard.clientWidth;
+ let settleTimer=null;
+ const paintStoryState=()=>{
   storySlides.forEach((slide,i)=>slide.classList.toggle('is-active',i===activeStory));
   storyDots.forEach((dot,i)=>{const on=i===activeStory;dot.classList.toggle('is-active',on);dot.setAttribute('aria-selected',String(on))});
   const previous=$('.storyboard-prev'),next=$('.storyboard-next');
   if(previous)previous.disabled=activeStory===0;
   if(next)next.disabled=activeStory===storySlides.length-1;
  };
- const syncStory=()=>{const index=Math.round(storyBoard.scrollLeft/storyBoard.clientWidth);if(index!==activeStory)updateStory(index,'auto')};
+ const updateStory=(index,behavior='smooth')=>{
+  activeStory=Math.max(0,Math.min(storySlides.length-1,index));
+  paintStoryState();
+  storyBoard.scrollTo({left:activeStory*storyBoard.clientWidth,behavior});
+ };
+ const syncStory=()=>{clearTimeout(settleTimer);settleTimer=setTimeout(()=>{const index=Math.round(storyBoard.scrollLeft/storyBoard.clientWidth);if(index!==activeStory){activeStory=Math.max(0,Math.min(storySlides.length-1,index));paintStoryState()}},80)};
  storyBoard.addEventListener('scroll',syncStory,{passive:true});
  $('.storyboard-prev')?.addEventListener('click',()=>updateStory(activeStory-1));
  $('.storyboard-next')?.addEventListener('click',()=>updateStory(activeStory+1));
