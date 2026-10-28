@@ -148,6 +148,8 @@
 /* Guided-lesson framing for the focused MVP journey. */
 .landing-secondary{display:inline-flex;align-items:center;gap:2px;padding:11px 15px;font-size:10px}
 .landing-secondary b{margin-left:5px;color:#f17f6c;font-size:13px}
+.landing-mode .landing-secondary{border-color:#f5b9ac;color:#e87965;background:rgba(255,255,255,.82)}
+.landing-mode .landing-secondary:hover,.landing-mode .landing-secondary:focus-visible{border-color:#f17f6c;background:#fff0ec;color:#d96753;outline:none}
 .lesson-brief{max-width:1180px;margin:-8px 0 24px;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid rgba(255,255,255,.95);border-radius:18px;background:rgba(255,255,255,.72);box-shadow:0 12px 26px rgba(62,123,152,.07);backdrop-filter:blur(8px)}
 .lesson-brief>div:first-child{display:grid;gap:6px}.lesson-brief strong{font:600 14px 'Space Grotesk';color:#18324b}.lesson-steps{display:flex;align-items:center;gap:10px;color:#8aa3b6;font-size:10px;font-weight:700}.lesson-steps i{font-style:normal;color:#c3d7df}.lesson-steps .is-current{color:#f17f6c}
 .feedback-panel{margin-top:18px;padding:24px 25px}.feedback-panel h2{margin:9px 0 15px;color:#18324b;font:600 20px 'Space Grotesk'}.feedback-actions{display:flex;gap:8px;flex-wrap:wrap}.feedback-option{border:1px solid #d9eaf0;border-radius:999px;padding:9px 13px;background:rgba(255,255,255,.8);color:#4b7392;font-size:11px;transition:background .2s ease,border-color .2s ease,color .2s ease}.feedback-option:hover,.feedback-option.is-selected{border-color:#f5b9ac;background:#fff0ec;color:#e87965}.feedback-panel p{margin:12px 0 0;color:#8aa3b6;font-size:10px}
